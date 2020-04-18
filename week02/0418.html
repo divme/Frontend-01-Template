@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>0418</title>
+	<style>
+		.icon:before{
+			content: ''
+		}
+	</style>
+</head>
+<body>
+<div>
+	<h4>课堂作业：</h4>
+	<ul>
+		<li>1. 写一个正则，匹配所有 Number 直接量</li>
+		<li>3. 写一个正则，匹配一下 String </li>
+	</ul>
+</div>
+<ul>
+	<li>Javascript 只支持 Unicode，非ASCII字符都用\u转义掉</li>
+	<li>Html | Css 支持什么</li>
+</ul>
+<ol>
+	<li>不要用ASCII 范围的字符出现在代码里</li>
+	<li>ASCII 128个：0-9 a-z A-Z 加一些乱七八糟的字符</li>
+</ol>
+<span class="icon"></span>
+<!--词法-->
+<script>
+  for (let i = 0; i < 128; i++) {
+    document.write("<span>" + String.fromCharCode(i) + "</span>")
+  }
+  const str1 = "宗".codePointAt(0).toString();
+  // const str2 = "宗麒麟".charCodeAt(0);
+  const 宗麒麟 = 1;
+  const \u5389\u5bb3 = 1;
+  console.log('宗麒麟:', 宗麒麟);
+  console.log('的宗:', 厉害);
+</script>
+
+<!--类型-->
+<script>
+	var a = 0.1
+	var b = 0.2
+
+	const memory = new Float64Array(1)
+	memory[0] = a
+
+	const intarr = new Uint8Array(memory.buffer);
+	for(let i = 0; i < 8; i++) {
+	  document.write("<div>" + intarr[i] + "</div>")
+	}
+
+	console.log(intarr)
+</script>
+</body>
+</html>
+
+InputElement
+    WhiteSpace
+    LineTermirator
+    Comment
+    Token
+				IdentifierName
+            Identifier: 变量名 | 属性
+						Keywords
+				Literal
+				Punctuator
+
+WhiteSpace:
+
+BOM
+Bit order mask
+
+<ZWNBSP>  zero width no break space </ZWNBSP>
