@@ -16,3 +16,4 @@
          const reg6 = /[^\x00-\xff]/;  // 双字节字符
 
 // 3. 写一个 UTF-8 Encoding 的函数
+//       这题啥意思？ 将 Unicode 转化为 UTF-8？

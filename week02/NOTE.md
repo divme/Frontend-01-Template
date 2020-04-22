@@ -18,3 +18,4 @@
 - [每个JavaScript开发者都该懂的Unicode](https://developer.mozilla.org/zh-CN/docs/Web/Guide/Localizations_and_character_encodings)
 - [es6-阮一峰：字符串的扩展](https://es6.ruanyifeng.com/#docs/string)
 - [彻底理解字符编码](https://www.cnblogs.com/leesf456/p/5317574.html)
+- [位运算符在Js中的妙用](https://juejin.im/post/5a98ea2f6fb9a028bb186f34)
