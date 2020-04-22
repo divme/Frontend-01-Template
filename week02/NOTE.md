@@ -19,3 +19,4 @@
 - [es6-阮一峰：字符串的扩展](https://es6.ruanyifeng.com/#docs/string)
 - [彻底理解字符编码](https://www.cnblogs.com/leesf456/p/5317574.html)
 - [位运算符在Js中的妙用](https://juejin.im/post/5a98ea2f6fb9a028bb186f34)
+- [自己动手写个颜色类库：掌握Js中的位运算](https://segmentfault.com/a/1190000006677741)
