@@ -12,3 +12,9 @@
 
 以上两个盲区，需要投入点时间去补充；
 个人觉得 老师讲课中发现的盲点，以及带领对知识的梳理，才是此课最大的收获。
+
+
+这几天零散时间看了几篇文章，但是还没完全搞懂，参考链接如下，记录下来，继续研究下：
+[每个JavaScript开发者都该懂的Unicode](https://developer.mozilla.org/zh-CN/docs/Web/Guide/Localizations_and_character_encodings)
+[es6-阮一峰：字符串的扩展](https://es6.ruanyifeng.com/#docs/string)
+[彻底理解字符编码](https://www.cnblogs.com/leesf456/p/5317574.html)
