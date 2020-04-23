@@ -27,3 +27,13 @@ function UnicodeEncode(code){
   }
   return bytes
 }
+UnicodeEncode('😂a')
+UnicodeEncode('𠮷a')
+
+function encode2(code) {
+  if (typeof code !== 'string') return void 0;
+  let arr = [...code];
+  return arr.map((item) => item.codePointAt(0).toString(16))
+}
+encode2('😂a')
+encode2('𠮷a')
