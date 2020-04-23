@@ -17,3 +17,13 @@
 
 // 3. 写一个 UTF-8 Encoding 的函数
 //       这题啥意思？ 将 Unicode 转化为 UTF-8？
+function UnicodeEncode(code){
+  if (typeof code !== 'string') return void 0;
+  const bytes = [];
+  for (let i = 0; i < code.length; i++) {
+    const c = code.codePointAt(i).toString(16)
+    if (  c > 0Xffff ) i++;
+    bytes.push(c)
+  }
+  return bytes
+}
