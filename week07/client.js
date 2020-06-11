@@ -1,4 +1,5 @@
-const net = require("net");
+const net = require('net');
+const parse = require('./core/parse');
 
 class Request {
   // method, url = host + port + path
@@ -256,8 +257,9 @@ void async function () {
   let request = new Request(options)
 
   let response = await request.send();
+  console.log('response', response);
 
-
+  let dom = parse.parseHTML(response.body);
 
 
   console.log(response)
