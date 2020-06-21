@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>TrafficLight</title>
+	<style>
+		.box {
+			display: flex;
+			justify-content: space-around;
+			align-content: center;
+
+			width: 500px;
+			margin: 20px auto;
+		}
+		.light {
+			width: 100px;
+			height: 100px;
+			border-radius: 50%;
+			background: #ccc;
+		}
+	</style>
+</head>
+<body>
+<div class="box">
+	<div class="light" id="red"></div>
+	<div class="light" id="green"></div>
+	<div class="light" id="yellow"></div>
+</div>
+
+<script>
+	var red = document.getElementById('red');
+	var green = document.getElementById('green');
+	var yellow = document.getElementById('yellow');
+	var light = {
+	  red, green, yellow
+	}
+  async function start(){
+    while (true){
+      change('green');
+      await sleep(3000);
+      change('yellow');
+      await sleep(1000);
+      change('red');
+      await sleep(2000);
+    }
+  }
+  async function sleep(delay) {
+	  await new Promise((resolve) => {
+	    setTimeout(resolve, delay);
+	  })
+  }
+  function change(color){
+    Object.values(light).forEach(item => item.style.background = '#ccc');
+    light[color].style.background = color;
+  }
+  start()
+</script>
+</body>
+</html>
