@@ -23,17 +23,27 @@
 <div id="container"></div>
 
 <button onclick="localStorage.map = JSON.stringify(map)">保存</button>
+<button onclick="localStorage.map = ''">clear</button>
 <script>
 	class BinaryHeap {
-	  constructor() {
-
-	  }
-	  take() {
-
-	  }
-	  insertAt(i, v) {
-
-	  }
+    constructor(data, compare) {
+      this.data = data;
+      this.compare = compare
+    }
+    take() {
+      if (!this.data.length)
+        return;
+      let min = this.data[0];
+      let minIndex = 0;
+      // fix heap
+      return min;
+    }
+    insert(n) {
+      this.data.push(n)
+    }
+    get length() {
+      return this.data.length
+    }
 	}
 
 	class Sorted {
@@ -63,6 +73,7 @@
 	    return this.data.length
 	  }
 	}
+
 	// 地图表盘
 	// true false
 	// 可视化
@@ -106,6 +117,9 @@
 	  map = map.slice()
 	  let queue = [start]
 
+    container.children[100 * start[1] + start[0]].style.background = 'black';
+    container.children[100 * end[1] + end[0]].style.background = 'pink';
+
 		async function insert([x, y], pre) {
 	    if (map[100 * y + x] !== 0)
 	      return;
@@ -115,7 +129,7 @@
 	      return;
 	    map[100 * y + x] = pre;
 	    container.children[100 * y + x].style.background = 'lightgreen';
-			await sleep(5);
+			// await sleep(5);
 	    queue.push([x, y]);
 		}
 
@@ -124,14 +138,14 @@
 
 			if (x === end[0] && y === end[1]) { // end condition
 			  let path = [];
-			  while (x !== start[0] || y !== end[1]) {
+			  while (x !== start[0] || y !== start[1]) {
 			    path.push([x, y])
           container.children[100 * y + x].style.background = 'pink';
 				  [x, y] = map[100 * y + x]
 			  }
 			  return path;
 			}
-			// 左  下 右 上
+			// 左 下 右 上
       await insert([x - 1, y], [x, y]);
       await insert([x, y - 1], [x, y]);
       await insert([x + 1, y], [x, y]);
