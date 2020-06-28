@@ -34,12 +34,41 @@
       if (!this.data.length)
         return;
       let min = this.data[0];
-      let minIndex = 0;
+      let i = 0;
       // fix heap
+	    while (i < this.data.length) {
+	      if ( i * 2 + 1 >= this.data.length)
+	        break
+		    if ( i * 2 + 2 >= this.data.length) {
+          this.data[i] = this.data[i * 2 + 1]
+		      i = i * 2 + 1
+			    break
+		    }
+	      if (this.compare(this.data[i * 2 + 1], this.data[i * 2 + 2]) < 0) {
+	        this.data[i] = this.data[i * 2 + 1]
+	        i = i * 2 + 1
+	      } else {
+          this.data[i] = this.data[i * 2 + 2]
+	        i = i * 2 + 2
+	      }
+	    }
+	    if (i < this.data.length - 1)
+	      this.insertAt(i, this.data.pop())
+      else
+        this.data.pop()
+
       return min;
     }
+    insertAt(i, v) {
+	    this.data[i] = v
+	    while (i > 0 && this.compare(v, this.data[Math.floor((i-1)/2)]) < 0) {
+	      this.data[i] = this.data[Math.floor((i-1)/2)];
+        this.data[Math.floor((i-1)/2)] = v
+		    i = Math.floor((i-1)/2)
+	    }
+    }
     insert(n) {
-      this.data.push(n)
+      this.insertAt(this.data.length, n)
     }
     get length() {
       return this.data.length
@@ -115,7 +144,14 @@
 
 	async function path(map, start, end) {
 	  map = map.slice()
-	  let queue = [start]
+
+	  // let queue = [start]
+
+		function distance([x, y]) {
+	    return  (x - end[0]) ** 2 + (y - end[1]) **2;
+		}
+		// let collection = new Sorted([start], (a, b) => distance(a) - distance(b));
+		let collection = new BinaryHeap([start], (a, b) => distance(a) - distance(b));
 
     container.children[100 * start[1] + start[0]].style.background = 'black';
     container.children[100 * end[1] + end[0]].style.background = 'pink';
@@ -123,18 +159,18 @@
 		async function insert([x, y], pre) {
 	    if (map[100 * y + x] !== 0)
 	      return;
-	    if (queue[100 * y + x])
-	      return;
 	    if (x < 0 || y < 0 || x >= 100 || y >= 100)
 	      return;
 	    map[100 * y + x] = pre;
 	    container.children[100 * y + x].style.background = 'lightgreen';
-			// await sleep(5);
-	    queue.push([x, y]);
+			await sleep(5);
+	    // queue.push([x, y]);
+      collection.insert([x, y])
 		}
 
-		while(queue.length) {
-	    let [x, y] = queue.shift();  // pop unshift | push shift
+		while(collection.length) {
+	    // let [x, y] = queue.shift();  // pop unshift | push shift
+			let [x,y] = collection.take();
 
 			if (x === end[0] && y === end[1]) { // end condition
 			  let path = [];
@@ -157,14 +193,28 @@
       // await insert([x, y - 1], [x, y]);
       // await insert([x, y + 1], [x, y]);
 
-      // 左下 右下 左上 右上
-      // await insert([x - 1, y - 1], [x, y]);
-      // await insert([x + 1, y - 1], [x, y]);
-      // await insert([x - 1, y + 1], [x, y]);
-      // await insert([x + 1, y + 1], [x, y]);
+      // 左上 右上 左下 右下
+			const left = map[100*y + x -1]
+			const right = map [100*y + x +1]
+			const top = map[100*(y-1) + x]
+			const bottom = map[100*(y+1) + x]
+			if (left === 0 || top === 0) {
+        await insert([x - 1, y - 1], [x, y]);
+			}
+      if (right === 0 || top === 0) {
+        await insert([x + 1, y - 1], [x, y]);
+      }
+      if (left === 0 || bottom === 0) {
+        await insert([x - 1, y + 1], [x, y]);
+      }
+			if (right === 0 || bottom === 0) {
+        await insert([x + 1, y + 1], [x, y]);
+			}
 		}
 		return null;
 	}
+
+	path(map, [0, 0], [45, 30])
 	// 广搜能找到最优路径，queue
 	// 深搜很傻呼呼，stack
 </script>
