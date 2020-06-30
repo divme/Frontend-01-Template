@@ -9,7 +9,7 @@
     console.log(13)
 </script>
 <script>
-    var reg = /([0-9\.]+)|([ ])|([\r\n])|(\+)|(\-)|(\*)|(\/)/
+    var reg = /([0-9\.]+)|([ ])|([\r\n])|(\+)|(\-)|(\*)|(\/)/g
     var dictionary = ['Number', 'Whitespace', 'LineTerminator', '+', '-', '*', '/'];
 
     function tokenize(source) {
