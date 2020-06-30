@@ -6,33 +6,127 @@
 </head>
 <body>
 <script>
-    console.log(13)
-</script>
-<script>
-    var reg = /([0-9\.]+)|([ ])|([\r\n])|(\+)|(\-)|(\*)|(\/)/g
-    var dictionary = ['Number', 'Whitespace', 'LineTerminator', '+', '-', '*', '/'];
+    const reg = /([0-9\.]+)|([ ])|([\r\n])|(\+)|(\-)|(\*)|(\/)|(\()|(\))/g
+    const dictionary = ['Number', 'Whitespace', 'LineTerminator', '+', '-', '*', '/', '(', ')'];
 
-    function tokenize(source) {
-        var result = null;
-        var lastIndex = 0;
+    let source = [];
 
-        do {
+    // const expression = "1024 * 25"
+    // const expression = "1024 + 10 * 25"
+    const expression = "10 * ( 2 + 3) * 5 + 8"
+
+    for(let token of tokenize(expression)) {
+        if (token.type !== 'Whitespace' && token.type !== 'LineTerminator')
+            source.push(token);
+    }
+    console.log('source: ', source);
+
+    // console.log(MultiplicativeExpression(source))
+    // console.log(Expression(source))
+
+
+    function* tokenize(source) {
+        let result = null;
+        let lastIndex = 0;
+
+        while(true) {
             lastIndex = reg.lastIndex;
             result = reg.exec(source);
             if (!result) break;
-
-            for (var i = 0; i < dictionary.length; i++) {
-                if (result[i + 1]) {
-                    console.log(dictionary[i])
-                }
+            if (reg.lastIndex - lastIndex > result[0].length) {
+                throw Error('error \'' +
+                source.slice(lastIndex, reg.lastIndex - result[0].length) + '\'!'
+                )
             }
 
-            console.log(result[0])
+            let token = {
+                type: null,
+                value: null
+            };
+            for (var i = 0; i < dictionary.length; i++) {
+                if (result[i + 1]) {
+                    token.type = dictionary[i]
+                }
+            }
+            token.value = (result[0]);
 
-        } while (result);
+            yield token;
+
+            console.log(result[0] === ' ' ?  '空白' : result[0])
+        }
+
+        yield {type: 'EOF'}
     }
 
-    tokenize("1024 + 10 * 25")
+    function Expression(source) {
+        if (source[0].type === 'AdditiveExpression' && source[1].type === 'EOF') {
+            let node = {
+                type: 'Expression',
+                children: [source.shift(), source.shift()]
+            }
+            source.unshift(node)
+            return node
+        }
+        AdditiveExpression(source)
+        return Expression(source)
+    }
+
+    function AdditiveExpression(source) { // 3种start：Number MultiplicativeExpression AdditiveExpression
+        if (source[0].type === 'Number') {
+            MultiplicativeExpression(source)
+            return AdditiveExpression(source)
+        }
+        if (source[0].type === 'MultiplicativeExpression') {
+            let node = {
+                type: 'AdditiveExpression',
+                children: source.shift()
+            }
+            source.unshift(node);
+            return AdditiveExpression(source);
+        }
+        if (source[0].type === 'AdditiveExpression' &&
+              source.length > 1 &&
+              (source[1].type === '+' || source[1].type === '-')) {
+            let node = {
+                type: 'AdditiveExpression',
+                children: [source.shift(), source.shift()]
+            }
+            MultiplicativeExpression(source)
+            node.children.push(source.shift())
+            source.unshift(node)
+            return AdditiveExpression(source);
+        }
+        if(source[0].type === 'AdditiveExpression')
+            return source[0]
+    }
+
+    function MultiplicativeExpression(source) { // 2种start: Number MultiplicativeExpression
+        if (source[0].type === 'Number') {
+            let node = {
+                type: 'MultiplicativeExpression',
+                children: source.shift()
+            }
+            source.unshift(node);
+            return MultiplicativeExpression(source);
+        }
+        if (source[0].type === 'MultiplicativeExpression' &&
+              source.length > 1 &&
+              (source[1].type === '/' || source[1].type === '*')) {
+            let node = {
+                type: 'MultiplicativeExpression',
+                children: [source.shift(), source.shift(), source.shift()]
+            }
+            source.unshift(node);
+            return MultiplicativeExpression(source);
+        }
+
+        if(source[0].type === 'MultiplicativeExpression')
+           return source[0]
+    }
+
+    function BracketExpression(source) {
+        if (source)
+    }
 </script>
 </body>
 </html>
