@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>create ast</title>
+</head>
+<body>
+<script>
+    function complier(source) {
+        let tokens = tokenizer(source)
+        let ast = parser(tokens)
+        let nextAst = transform(ast)
+        let output = codeGenerator(nextAst)
+        return output
+    }
+
+    // 词法分析
+    // ( ) " 0-9 a-z A-Z \s
+    function tokenizer(source) {
+        let tokens = []
+        let cur = 0
+
+        while(cur < source.length) {
+          let char = source[cur]
+            if (char === '(' || char === ')') {
+                tokens.push({
+                    type: 'paren',
+                    value: char
+                })
+                cur++;
+                continue;
+            }
+
+            if (/\s/.test(char)) {
+                cur++;
+                continue
+            }
+
+            if (/\d/.test(char)) {
+                let val = '' + char
+                while(/\d/.test(source[++cur]) && cur < source.length) {
+                    val += char
+                }
+                tokens.push({
+                    type: 'number',
+                    value: val
+                })
+            }
+
+            if(/\/)
+        }
+    }
+
+    // 语法分析
+    function parser(tokens) {
+
+    }
+
+    function transform(ast) {
+
+    }
+
+    function codeGenerator(newAst) {
+
+    }
+</script>
+</body>
+</html>

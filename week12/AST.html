@@ -14,7 +14,10 @@
     // const expression = "1024 * 25"
     // const expression = "1024 * 25 * 2 * 3"
     // const expression = "1024 + 10 * 25"
+
     const expression = "10 * ( 2 + 3) * 5 + 8"
+    // const expression = "(1+3)*6"
+    // const expression = "3*(1+3)*6"
 
     for(let token of tokenize(expression)) {
         if (token.type !== 'Whitespace' && token.type !== 'LineTerminator')
