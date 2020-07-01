@@ -12,6 +12,7 @@
     let source = [];
 
     // const expression = "1024 * 25"
+    // const expression = "1024 * 25 * 2 * 3"
     // const expression = "1024 + 10 * 25"
     const expression = "10 * ( 2 + 3) * 5 + 8"
 
@@ -22,9 +23,10 @@
     console.log('source: ', source);
 
     // console.log(MultiplicativeExpression(source))
-    // console.log(Expression(source))
+    console.log('Expression: ', Expression(source))
 
 
+    // 词法解析
     function* tokenize(source) {
         let result = null;
         let lastIndex = 0;
@@ -52,12 +54,13 @@
 
             yield token;
 
-            console.log(result[0] === ' ' ?  '空白' : result[0])
+            // console.log(result[0] === ' ' ?  '空白' : result[0])
         }
 
         yield {type: 'EOF'}
     }
 
+    // 语法解析
     function Expression(source) {
         if (source[0].type === 'AdditiveExpression' && source[1].type === 'EOF') {
             let node = {
@@ -70,16 +73,21 @@
         AdditiveExpression(source)
         return Expression(source)
     }
-
+    // (1+2) * 3
+    // 1 + (2*3)
     function AdditiveExpression(source) { // 3种start：Number MultiplicativeExpression AdditiveExpression
-        if (source[0].type === 'Number') {
+        if (source[0].type === 'Number' || source[0].type === 'BracketExpression') {
             MultiplicativeExpression(source)
+            return AdditiveExpression(source)
+        }
+        if (source[0].type === '(') {
+            BracketExpression(source)
             return AdditiveExpression(source)
         }
         if (source[0].type === 'MultiplicativeExpression') {
             let node = {
                 type: 'AdditiveExpression',
-                children: source.shift()
+                children: [source.shift()]
             }
             source.unshift(node);
             return AdditiveExpression(source);
@@ -96,12 +104,24 @@
             source.unshift(node)
             return AdditiveExpression(source);
         }
+        if (source[0].type === 'AdditiveExpression' &&
+            source.length > 1 &&
+            (source[1].type === '(' || source[1].type === 'BracketExpression')) {
+            let node = {
+                type: 'AdditiveExpression',
+                children: [source.shift(), source.shift()]
+            }
+            BracketExpression(source)
+            node.children.push(source.shift())
+            source.unshift(node)
+            return AdditiveExpression(source);
+        }
         if(source[0].type === 'AdditiveExpression')
             return source[0]
     }
 
     function MultiplicativeExpression(source) { // 2种start: Number MultiplicativeExpression
-        if (source[0].type === 'Number') {
+        if (source[0].type === 'Number' || source[0].type === 'BracketExpression') {
             let node = {
                 type: 'MultiplicativeExpression',
                 children: source.shift()
@@ -109,6 +129,21 @@
             source.unshift(node);
             return MultiplicativeExpression(source);
         }
+
+        if (source[0].type === 'MultiplicativeExpression' &&
+            source.length > 1 &&
+            (source[1].type === '/' || source[1].type === '*') &&
+            source[2].type === '(') {
+            let node = {
+                type: 'MultiplicativeExpression',
+                children: [source.shift(), source.shift()]
+            }
+            BracketExpression(source)
+            node.children.push(source.shift())
+            source.unshift(node);
+            return MultiplicativeExpression(source);
+        }
+
         if (source[0].type === 'MultiplicativeExpression' &&
               source.length > 1 &&
               (source[1].type === '/' || source[1].type === '*')) {
@@ -124,8 +159,33 @@
            return source[0]
     }
 
+    // （1+2）*3
+    //  3*（1+2）
+    //  1+（2+3）
     function BracketExpression(source) {
-        if (source)
+        if (source[0].type === '(') {
+            let node = {
+                type: 'BracketExpression',
+                children: [source.shift()]
+            }
+            AdditiveExpression(source)
+            node.children.push(source.shift())
+            source.unshift(node)
+            return BracketExpression(source)
+        }
+        if (source[0].type === 'BracketExpression' &&
+            source.length > 1 &&
+            source[1].type === ')'
+        ) {
+            let node = {
+                type: 'BracketExpression',
+                children: [source.shift(), source.shift()]
+            }
+            source.unshift(node)
+            return BracketExpression(source)
+        }
+
+        if (source[0].type === 'BracketExpression') return source[0]
     }
 </script>
 </body>
