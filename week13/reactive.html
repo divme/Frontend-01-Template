@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Reactive</title>
+</head>
+<body>
+<script>
+	let handlers = new Map() // 响应式对象属性设置时 执行的函数
+
+	let reactivities = new Map() // 可响应对象集合
+
+	let usedReactivities = [] // 可响应的对象 属性集合数组
+
+	function reactive(obj) {
+	  if (reactivities.has(obj)) {
+	    return reactivities.get(obj)
+	  }
+
+	  let proxy = new Proxy(obj, {
+	    get(obj, prop) {
+	      usedReactivities.push([obj, prop])
+		    if (typeof obj[prop] === 'object') {
+		      return reactive(obj[prop])
+		    }
+	      return obj[prop]
+	    },
+	    set(obj, prop, val) {
+	      obj[prop] = val
+		    if (handlers.get(obj)) {
+		      if (handlers.get(obj).get(prop)) {
+		        for (let handler of handlers.get(obj).get(prop))
+		          handler()
+		      }
+		    }
+		    return obj[prop]
+	    }
+	  })
+
+		reactivities.set(obj, proxy)
+		reactivities.set(proxy, proxy)
+
+		return proxy
+	}
+
+	// 绑定响应式属性关系
+	function effect(handler) {
+	  usedReactivities = []
+		handler()
+		for (let usedReactivity of usedReactivities) {
+
+		  let [obj, prop] = usedReactivity
+
+      if (!handlers.has(obj)) {
+        handlers.set(obj, new Map())
+      }
+
+      if (!handlers.get(obj).has(prop)) {
+        handlers.get(obj).set(prop, [])
+      }
+
+      handlers.get(obj).get(prop).push(handler)
+		}
+	}
+
+
+  let obj = {
+    a: {x: 3},
+    b: 2
+  }
+	let v
+	let p = reactive(obj)
+	effect(() => v = p.a.x)
+	console.log(v)
+	p.a.x = 4
+	console.log(v)
+	obj.a.x = 10
+	console.log(obj.a)
+	console.log(v)
+</script>
+</body>
+</html>
