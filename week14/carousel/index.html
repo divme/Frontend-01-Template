@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Carousel</title>
+  <style>
+     .carousel {
+       width: 500px;
+       height: 300px;
+       /*outline: 1px solid blue;*/
+       white-space: nowrap;
+       overflow: hidden;
+     }
+     .carousel > img {
+       display: inline-block;
+       width: 500px;
+       height: 300px;
+       transition: ease 1s;
+     }
+  </style>
+</head>
+<body>
+<div id="container"></div>
+<script>
+  let data = [
+    './images/1.jpg',
+    './images/2.jpg',
+    './images/3.jpg',
+    './images/4.jpg',
+  ]
+
+  class Carousel {
+    constructor() {
+      this.root = null
+      this.data = data
+    }
+
+    render() {
+      this.root = document.createElement('div')
+      this.root.classList.add('carousel')
+
+      for(let img of this.data) {
+        let element = document.createElement('img')
+        element.src = img
+        element.addEventListener('dragstart', e => e.preventDefault())
+        this.root.appendChild(element)
+      }
+
+      // let position = this.data.length - 1
+      let position = 0
+
+      let nextPic = () => {
+        let nextPosition = (position + 1) % this.data.length
+
+        let current = this.root.childNodes[position]
+        let next = this.root.childNodes[nextPosition]
+
+        current.style.transition = 'ease 0s'
+        next.style.transition = 'ease 0s'
+
+        current.style.transform = `translateX(${- 100 * position}%)`
+        next.style.transform = `translateX(${100 -100 * nextPosition}%)`
+
+        setTimeout(() => {
+          current.style.transition= 'ease 0.5s'
+          next.style.transition = 'ease 0.5s'
+
+          current.style.transform = `translateX(${- 100 - 100 * position}%)`
+          next.style.transform = `translateX(${-100 * nextPosition}%)`
+
+          position = nextPosition
+        }, 16)
+
+        setTimeout(nextPic, 2000)
+      }
+
+      nextPic()
+
+      this.root.addEventListener('mousedown', e => {
+        let startX = e.clientX, startY = e.clientY
+
+        let lastPosition = (position - 1 + this.data.length) % this.data.length
+        let nextPosition = (position + 1) % this.data.length
+
+
+
+      })
+    }
+  }
+
+  let carousel = new Carousel
+  carousel.render()
+
+  document.getElementById('container').appendChild(carousel.root)
+</script>
+</body>
+</html>

@@ -119,7 +119,7 @@ let myComponent = <Component id='a' class='b'>
     <p>I am text in p</p>
     <span>{new Wrapper('span')}</span>
     <div>I am a div</div>
-    <div>1</div>
+    <div>11222</div>
 </Component>
 
 // let myComponent = <div>
