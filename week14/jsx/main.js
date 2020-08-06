@@ -3,7 +3,6 @@
 // 一个 el， 一般插入两部分内容：属性 ｜ children
 
 function create(El, attrs, ...children) {
-  debugger
   let o
   if (typeof El === 'string') {
      o = new Wrapper(El)

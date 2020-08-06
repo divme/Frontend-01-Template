@@ -119,9 +119,7 @@
           last.style.transform = `translateX(${offset * this.width - this.width - this.width * lastPosition}px)`
           next.style.transform = `translateX(${offset * this.width + this.width - this.width * nextPosition}px)`
 
-          console.log('up1: ', position)
           position = (position - offset + this.data.length) % this.data.length
-          console.log('up: ', position)
 
           document.removeEventListener('mousemove', move)
           document.removeEventListener('mouseup', up)
