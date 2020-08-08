@@ -6,14 +6,14 @@
 // el 参数，若为 html 标签，则为字符串，若为 自定义元素，则为 对象
 export function create(El, attrs, ...children) {
   let o
+  // 此处不生效，因为如果没有对应元素或对象的话，根本不会进入此函数
   // if (!El) {
   //   o = new Component()
   // }
   if (typeof El === 'string') {
      o = new Wrapper(El)
   } else {
-    debugger
-    o = new Component({
+    o = new El({
       name: String(El)
     })
   }

@@ -1,4 +1,4 @@
-import {create, Wrapper, Text} from "./src/createElement";
+import {create, Wrapper, Text} from "./src/jsx";
 
 // let myComponent =  <div id="a" class="b" />
 
