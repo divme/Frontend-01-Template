@@ -30,7 +30,6 @@ export function enableGesture(el) {
 
   // touch 天然目标锁定，在哪触发，在哪结束
   element.addEventListener('touchstart', e => {
-    console.log(e)
     for (let touch of e.changedTouches) {
       contexts[touch.identifier] = Object.create(null)
       start(touch, contexts[touch.identifier])
@@ -58,10 +57,13 @@ export function enableGesture(el) {
   })
 
   // tap
-  // press - pressstart  pressend
+  // press - pressstart  pressend presscancel
+
   // pan - panstart panmove panend
   // flick
 
+  // tap | press 只触发一个
+  // pan ｜ flick 可以同时触发
   let start = (point, context) => {
     element.dispatchEvent(new CustomEvent('start', {
       startX: point.clientX,
@@ -77,9 +79,11 @@ export function enableGesture(el) {
     context.isPress = false
     context.timeoutHandler = setTimeout(() => {
       if (context.isPan) return
+
       context.isTap = false
       context.isPan = false
       context.isPress = true
+
       element.dispatchEvent(new CustomEvent('pressstart', {}))
     }, 500)
   }
@@ -90,9 +94,11 @@ export function enableGesture(el) {
     if (dx ** 2 + dy ** 2 > 100 && !context.isPan) {
       if (context.isPress)
         element.dispatchEvent(new CustomEvent('presscancel', {}))
+
       context.isTap = false
       context.isPan = true
       context.isPress = false
+
       element.dispatchEvent(new CustomEvent('panstart', {
         startX: point.clientX,
         startY: point.clientY,
@@ -102,7 +108,6 @@ export function enableGesture(el) {
     }
 
     if (context.isPan) {
-      console.log('pan')
       context.moves.push({
         dx, dy,
         t: Date.now()
@@ -122,6 +127,7 @@ export function enableGesture(el) {
       let dx = point.clientX - context.startX, dy = point.clientY - context.startY
       let record = context.moves[0]
       let speed = Math.sqrt((record.dx - dx) ** 2 + (record.dy - dy) ** 2) / (Date.now() - record.t)
+
       let isFlick = speed > 2.5
       if (isFlick) {
         element.dispatchEvent(new CustomEvent('flick', {
@@ -136,7 +142,9 @@ export function enableGesture(el) {
         startX: point.clientX,
         startY: point.clientY,
         clientX: point.clientX,
-        clientY: point.clientY
+        clientY: point.clientY,
+        speed,
+        isFlick: isFlick
       }))
     }
 
