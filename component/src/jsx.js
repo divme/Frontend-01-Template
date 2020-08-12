@@ -5,7 +5,7 @@ import {enableGesture} from "./gesture"
 // 一个 el， 一般插入两部分内容：属性 ｜ children
 
 // el 参数，若为 html 标签，则为字符串，若为 自定义元素，则为 对象
-export function create(El, attrs, ...children) {
+export function createElement(El, attrs, ...children) {
   let o
   if (typeof El === 'string') {
      o = new Wrapper(El)

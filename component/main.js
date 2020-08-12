@@ -1,4 +1,4 @@
-import {create} from "./src/jsx"
+import {createElement} from "./src/jsx"
 
 import {Carousel} from './components/Carousel'
 

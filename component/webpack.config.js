@@ -1,10 +1,12 @@
+const path = require('path')
+
 module.exports = {
     entry: './main.js',
     mode: 'development',
     module: {
         rules: [
             {
-                test: /\.js/,
+                test: /\.js$/,
                 use: {
                     loader: 'babel-loader',
                     options: {
@@ -13,11 +15,23 @@ module.exports = {
                             [
                                 '@babel/plugin-transform-react-jsx',
                                 {
-                                    pragma: 'create'
+                                    pragma: 'createElement'
                                 }
                             ]
                         ]
                     }
+                }
+            },
+            {
+                test: /\.css$/,
+                use: {
+                    loader: path.resolve('./localLoader/cssloader.js')
+                }
+            },
+            {
+                test: /\.view$/,
+                use: {
+                    loader: path.resolve('./localLoader/viewLoader.js')
                 }
             }
         ]

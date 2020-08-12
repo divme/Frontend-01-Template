@@ -1,7 +1,9 @@
-import {create, Text, Wrapper} from "../src/jsx"
+import {createElement, Text, Wrapper} from "../src/jsx"
 
 import {Timeline, Animation} from '../src/animation'
 import {ease} from '../src/lib/cubicBezier'
+
+import './carousel.css'
 
 export class Carousel {
   constructor() {
@@ -68,7 +70,7 @@ export class Carousel {
           direction = -1
         }
 
-        timeline.reset()
+        timeline.restart()
         timeline.start()
 
         let lastElement = children[lastPosition]
