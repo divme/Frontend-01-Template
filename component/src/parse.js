@@ -37,6 +37,7 @@ function emit(token) {
     if (!token.isSelfClosing) stack.push(element)
 
     currentTextNode = null
+
   } else if (token.type === 'endTag') {
 
     if (top.tagName !== token.tagName) {
@@ -56,25 +57,26 @@ function emit(token) {
       top.children.push(currentTextNode)
     }
     currentTextNode.content += token.content
-
   }
 }
 
 function data(c) {
   if (c === '<') {
     return tagOpen
-  } else if (c === EOF) {
+  }
+
+  if (c === EOF) {
     emit({
       type: 'EOF'
     })
     return false
-  } else {
-    emit({
-      type: 'text',
-      content: c
-    })
-    return data
   }
+
+  emit({
+    type: 'text',
+    content: c
+  })
+  return data
 }
 
 function tagOpen(c) {
@@ -99,11 +101,18 @@ function tagOpen(c) {
 function tagName(c) {
   if (c.match(/^[\t\n\f ]$/)) {
     return beforeAttributeName
-  } else if (c === '/') {
-    return selfClosingStartTag
-  } else if (c.match(/s/)) {
   }
-
+  if (c === '/') {
+    return selfClosingStartTag
+  }
+  if (c.match(/^[A-Z]$/)) {
+    currentToken.tagName += c
+    return tagName
+  }
+  if (c === '>'){
+    emit(currentToken)
+    return data
+  }
 
 }
 
