@@ -1,4 +1,4 @@
-var parse = require('../src/parse')
+const parser = require('../src/parse')
 
 module.exports = function(source, map) {
   let tree = parser.parseHTML(source)
