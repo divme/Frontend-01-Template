@@ -284,7 +284,7 @@ function endTagOpen(c) {
   }
 }
 
-// 以下解析 script 的内容
+// 以下解析vue 单页文件 script 部分的内容
 
 function scriptData(c) {
   if (c === '<') {
