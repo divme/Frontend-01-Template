@@ -163,4 +163,124 @@ class MinStack_old {
 
 
 // ------------------------- 队列 --------------------
+// 4. 用栈实现一个队列
+// 题目描述：使用栈实现队列的下列操作：
+// push(x) -- 将一个元素放入队列的尾部。
+// shift() -- 从队列首部移除元素。
+// peek() -- 返回队列首部的元素。
+// empty() -- 返回队列是否为空。
 
+// 示例: MyQueue queue = new MyQueue();
+// queue.push(1);
+// queue.push(2);
+// queue.peek(); // 返回 1
+// queue.shift(); // 返回 1
+// queue.empty(); // 返回 false
+
+// 说明:
+
+// 你只能使用标准的栈操作 -- 也就是只有 push to top, peek/pop from top, size, 和 is empty 操作是合法的。
+// 你所使用的语言也许不支持栈。你可以使用 list 或者 deque（双端队列）来模拟一个栈，只要是标准的栈操作即可。
+// 假设所有操作都是有效的 （例如，一个空的队列不会调用 pop 或者 peek 操作）
+class Queue {
+    constructor() {
+        this.stack1 = []
+        this.stack2 = []
+    }
+    push(m) {
+        this.stack1.push(m)
+    }
+    shift() {
+        if (this.empty) return
+
+        if (!this.stack2.length) {
+            while(this.stack1.length) {
+                this.stack2.push(this.stack1.pop())
+            }
+        }
+
+        return this.stack2.pop()
+    }
+    peek() {
+        if (this.empty) return
+
+        if (!this.stack2.length) {
+            while(this.stack1.length) {
+                this.stack2.push(this.stack1.pop())
+            }
+        }
+
+        return this.stack2[this.stack2.length - 1]
+    }
+    empty() {
+        return this.stack1.length && this.stack2.length
+    }
+}
+
+
+// 5. 双端队列 - 滑动窗口
+// 题目描述：给定一个数组 nums 和滑动窗口的大小 k，请找出所有滑动窗口里的最大值。
+
+// 示例: 输入: nums = [1,3,-1,-3,5,3,6,7], 和 k = 3 输出: [3,3,5,5,6,7]
+
+// 解释: 滑动窗口的位置
+// ---------------
+// [1 3 -1] -3 5 3 6 7
+// 1 [3 -1 -3] 5 3 6 7
+// 1 3 [-1 -3 5] 3 6 7
+// 1 3 -1 [-3 5 3] 6 7
+// 1 3 -1 -3 [5 3 6] 7
+// 1 3 -1 -3 5 [3 6 7]
+
+// 最大值分别对应：
+// 3 3 5 5 6 7
+
+// 提示：你可以假设 k 总是有效的，在输入数组不为空的情况下，1 ≤ k ≤ 输入数组的大小。
+
+// 暴力解法
+function slidingWindow1(nums, k) {
+    let prevPoint = 0
+    let behindPoint = k - 1
+
+    let result = []
+
+    for (let m = 0; m < nums.length - k + 1; m++) {
+      let max = -INFINITY
+      for (let n = prevPoint; n < behindPoint + 1; n++) {
+          if (nums[n] > max) max = nums[n]
+      }
+      result.push(max)
+      prevPoint++
+      behindPoint++
+    }
+
+    return result
+}
+
+// 双端队列法
+function slidingWindow(nums, k) {
+
+    const length = nums.length
+    const deque = []
+    const result = []
+
+    // 1. 把当前元素推到它应该在的地方，队头 - 队尾，递减
+    // 2. 检查当前队头是否在滑动窗口内，不在，出队
+    // 3. 当遍历到k个时，窗口开始滑动，同时更新结果
+    for (let m = 0; m < length; m++) {
+       while (deque.length && nums[deque[deque.length - 1]] < nums[m]) {
+           deque.pop()
+       }
+       deque.push(m)
+
+       while (deque.length && deque[0] <= i - k) {
+           deque.shift()
+       }
+
+       if (i >= k - 1) {
+           result.push(nums[deque[0]])
+       }
+    }
+
+    return result
+}
