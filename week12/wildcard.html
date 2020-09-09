@@ -24,7 +24,34 @@
      let i = 0;
      let lastIndex = 0;
 
-     // for (i = 0; )
+     for (i = 0; pattern[i] !== '*'; i++) {
+       if (pattern[i] !== source[i] && pattern[i] !== '?') {
+         return false
+       }
+     }
+     lastIndex = i
+
+		 for (let m = 0; m < startCount - 1; m++) {
+		   i++
+			 let subPattern = ''
+			 while (pattern[i] !== '*') {
+		     subPattern += pattern[i]
+				 i++
+			 }
+
+			 let reg = new RegExp(subPattern.replace(/\?/g, '[\\s\\S]'), 'g')
+			 reg.lastIndex = lastIndex
+
+			 lastIndex = reg.lastIndex
+		 }
+
+		 for (let n = 0; n <= source.length - lastIndex && pattern[pattern.length - n] !== '*'; n++) {
+		   if (pattern[pattern.length - n] !== source[source.length - n] && pattern[pattern.length - j] !== '?') {
+		     return false
+		   }
+		 }
+
+		 return true
 	}
 </script>
 </body>
